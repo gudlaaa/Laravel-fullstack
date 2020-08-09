@@ -5,9 +5,10 @@ import firstpage from './components/pages/myFirstVuePage'
 import newRoute from './components/pages/newRoute'
 import methods from './components/pages/basic/methods'
 
-//projec
+// admin project pages
 import home from './components/pages/home'
-import tags from './components/pages/tags'
+import tags from './admin/pages/tags'
+import category from './admin/pages/category'
 
 const routes = [
 
@@ -20,6 +21,10 @@ const routes = [
     {
         path: '/tags',
         component: tags
+    },
+    {
+        path: '/category',
+        component: category
     },
     {
         path: '/my-name-vue-route',
