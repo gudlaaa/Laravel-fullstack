@@ -47,6 +47,9 @@ export default {
                 title: title,
                 desc: desc
             });
+        },
+        csrfToken(){
+            return window.Laravel.csrfToken;
         }
     },
 

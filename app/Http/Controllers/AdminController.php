@@ -40,4 +40,14 @@ class AdminController extends Controller
 
         
     }
+
+    public function upload( Request $request ) {
+        $this->validate($request, [
+            'file' => 'required|mimes:jpeg,jpg,png,gif',
+        ]);
+
+        $filename = time() . '.' . $request->file->extension();
+        $request->file->move(public_path('uploads'), $filename);
+        return $filename;
+    }
 }
