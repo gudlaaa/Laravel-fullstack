@@ -22,6 +22,7 @@ Route::get('app/get_tags', 'AdminController@getTags');
 /* category */
 
 Route::post('app/upload', 'AdminController@upload');
+Route::post('app/delete_image', 'AdminController@deleteImage');
 
 /* category */
 

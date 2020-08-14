@@ -48,6 +48,7 @@
                     <Input v-model="data.tagName" placeholder="Add category name" />
                     <div class="space"></div>
                     <Upload
+						ref="uploads"
                         type="drag"
 						:headers="{'x-csrf-token' : this.csrfToken(), 'X-Requested-With' : 'XMLHttpRequest'}"
 						:on-success="handleSuccess"
@@ -61,8 +62,12 @@
                             <p>Click or drag files here to upload</p>
                         </div>
                     </Upload>
-					<div class="image_thumb" v-if="data.iconImage">
+					<!-- <div class="demo-upload-list" v-for="item in uploadList"> -->
+					<div class="demo-upload-list" v-if="data.iconImage">
 						<img :src="'/uploads/' + data.iconImage" />
+						<div class="demo-upload-list-cover">
+							<Icon type="ios-trash-outline" @click="deleteImage"></Icon>
+						</div>
 					</div>
 					
 					<div slot="footer">
@@ -188,6 +193,18 @@ export default {
 				this.s('Tag has been deleted successfully')
 			} else {
 				this.swr()
+			}
+		},
+		async deleteImage(){
+			console.log(this.data.iconImage);
+			
+			let image = this.data.iconImage
+			this.data.iconImage = ''
+			this.$refs.uploads.clearFiles()
+			const res = await this.callApi('post', 'app/delete_image', {imageName: image})
+			if (res.status != 200){
+				this.data.iconImage = image
+				this.swr();
 			}
 		},
 		handleSuccess (res, file) {
