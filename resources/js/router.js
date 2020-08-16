@@ -9,6 +9,7 @@ import methods from './components/pages/basic/methods'
 import home from './components/pages/home'
 import tags from './admin/pages/tags'
 import category from './admin/pages/category'
+import usecom from './vuex/usecom'
 
 const routes = [
 
@@ -17,6 +18,10 @@ const routes = [
     {
         path: '/',
         component: home
+    },
+    {
+        path: '/testvuex',
+        component: usecom
     },
     {
         path: '/tags',
