@@ -12,7 +12,8 @@
 								<!-- TABLE TITLE -->
 							<tr>
 								<th>ID</th>
-								<th>Tag Name</th>
+								<th>Category Name</th>
+								<th>Category Image</th>
 								<th>Created Date</th>
 								<th>Action</th>
 							</tr>
@@ -20,14 +21,15 @@
 
 
 								<!-- ITEMS -->
-							<tr v-for="(tag, i) in this.tags"  :key="i" v-if="tags.length">
-							<!-- <tr v-for="tag in tags" :key="tag.id" v-if="tags.length"> -->
-								<td class="_table_name">{{tag.id}}</td>
-								<td>{{tag.tagName}}</td>
-								<td>{{tag.created_at}}</td>
+							<tr v-for="(category, i) in this.categories"  :key="i" v-if="categories.length">
+							<!-- <tr v-for="category in categories" :key="category.id" v-if="categories.length"> -->
+								<td class="_table_name">{{category.id}}</td>
+								<td>{{category.categoryName}}</td>
+								<td class="_table_name"><img :src="'/uploads/' + category.iconImage"></td>
+								<td>{{category.created_at}}</td>
 								<td>
-									<Button type="info" size="small" @click="showEditModal(tag, i)">Edit</Button>
-									<Button type="error" size="small" @click="showDeleteModal(tag, i)" :loading="tag.isDeleting" >Delete</Button>
+									<Button type="info" size="small" @click="showEditModal(category, i)">Edit</Button>
+									<Button type="error" size="small" @click="showDeleteModal(category, i)" :loading="category.isDeleting" >Delete</Button>
 									<!-- <button class="_btn btn-primary" type="button">Edit</button>
 									<button class="_btn _action_btn make_btn1" type="button">Delete</button> -->
 								</td>
@@ -45,7 +47,7 @@
 					:mask-closable="false"
 					:closable="false">
                     <div class="space"></div>
-                    <Input v-model="data.tagName" placeholder="Add category name" />
+                    <Input v-model="data.categoryName" placeholder="Add category name" />
                     <div class="space"></div>
                     <Upload
 						ref="uploads"
@@ -72,18 +74,41 @@
 					
 					<div slot="footer">
 						<Button type="default" @click="addModal = false">Close</Button>
-						<Button type="primary" @click="addTag" :disabled="isAdding" :loading="isAdding">{{isAdding ? 'Adding..' : 'Add tag'}}</Button>
+						<Button type="primary" @click="addCategory" :disabled="isAdding" :loading="isAdding">{{isAdding ? 'Adding..' : 'Add Category'}}</Button>
 					</div>
 				</Modal>
 				<Modal
 					v-model="editModal"
-					title="Edit Tag"
+					title="Edit Category"
 					:mask-closable="false"
 					:closable="false">
-					<Input v-model="editData.tagName" placeholder="Edit tag name" style="width: 300px" />
+					<Input v-model="editData.categoryName" placeholder="Edit category name" />
+					<Upload v-show="isIconImageNew"
+						ref="editUploads"
+                        type="drag"
+						:headers="{'x-csrf-token' : this.csrfToken(), 'X-Requested-With' : 'XMLHttpRequest'}"
+						:on-success="handleSuccess"
+						:on-error="handleError"
+						:max-size="2048"
+						:on-format-error="handleFormatError"
+						:on-exceeded-size="handleMaxSize"
+                        action="/app/upload">
+                        <div style="padding: 20px 0">
+                            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                            <p>Click or drag files here to upload</p>
+                        </div>
+                    </Upload>
+					<!-- <div class="demo-upload-list" v-for="item in uploadList"> -->
+					<div class="demo-upload-list" v-if="editData.iconImage">
+						<img :src="'/uploads/' + editData.iconImage" />
+						<div class="demo-upload-list-cover">
+							<Icon type="ios-trash-outline" @click="deleteImage()"></Icon>
+						</div>
+					</div>
+					
 					<div slot="footer">
 						<Button type="default" @click="editModal = false">Close</Button>
-						<Button type="primary" @click="editTag" :disabled="isAdding" :loading="isAdding">{{isAdding ? 'Editing..' : 'Edit tag'}}</Button>
+						<Button type="primary" @click="editCategory" :disabled="isAdding" :loading="isAdding">{{isAdding ? 'Editing..' : 'Edit Category'}}</Button>
 					</div>
 				</Modal>
 				<!-- delete modal -->
@@ -93,10 +118,10 @@
 						<span>Delete confirmation</span>
 					</p>
 					<div style="text-align:center">
-						<p>Are you sure you want to delete this tag?</p>
+						<p>Are you sure you want to delete this category?</p>
 					</div>
 					<div slot="footer">
-						<Button type="error" size="large" long :loading="false" :disabled="false" @click="deleteTag">Delete</Button>
+						<Button type="error" size="large" long :loading="false" :disabled="false" @click="deleteCategory">Delete</Button>
 					</div>
 				</Modal>
 
@@ -118,27 +143,30 @@ export default {
 			editModal: false,
 			isAdding: false,
 			deleteModal: false,
-			tags: [],
+			categories: [],
 			editData: {
-				tagName: '',
+				categoryName: '',
+				iconImage: '',
 			},
-            deleteData: {},
+			deleteData: {},
+			isIconImageNew: false,
 		}
 	},
 	methods: {
-		async addTag () {
-			if ( this.data.tagName.trim() == '') return this.e('Tag name is required');
-			const res = await this.callApi('post', 'app/create_tag', {tagName: this.data.tagName});
+		async addCategory () {
+			if ( this.data.categoryName.trim() == '') return this.e('Category name is required');
+			if ( this.data.iconImage.trim() == '') return this.e('Category image is required');
+			const res = await this.callApi('post', 'app/create_category', {categoryName: this.data.categoryName, iconImage: this.data.iconImage});
 			console.log(res);
 			if (res.status == 201){
-				this.tags.unshift(res.data);
-				this.s('Tag added successfully');
+				this.categories.unshift(res.data);
+				this.s('Category added successfully');
 				this.addModal = false;
-				this.data.tagName = ''
+				this.data.categoryName = ''
 			} else {
 				if(res.status == 422){
-					if(res.data.errors.tagName){
-						this.e(res.data.errors.tagName[0])
+					if(res.data.errors.categoryName){
+						this.e(res.data.errors.categoryName[0])
 					}
 				} else {
 					this.swr()
@@ -146,18 +174,23 @@ export default {
 				
 			}
 		},
-		async editTag () {
-			if ( this.editData.tagName.trim() == '') return this.e('Tag name is required');
-			const res = await this.callApi('post', 'app/edit_tag', this.editData);
+		async editCategory () {
+			if ( this.editData.categoryName.trim() == '') return this.e('Category name is required');
+			if ( this.editData.iconImage.trim() == '') return this.e('Category Image is required');
+			const res = await this.callApi('post', 'app/edit_category', this.editData);
 			console.log(res);
 			if (res.status == 200){
-				this.tags[this.editData.index].tagName = this.editData.tagName
-				this.s('Tag has been edited successfully');
+				this.categories[this.editData.index].categoryName = this.editData.categoryName
+				this.categories[this.editData.index].iconImage = this.editData.iconImage
+				this.s('Category has been edited successfully');
 				this.editModal = false;
 			} else {
 				if(res.status == 422){
-					if(res.data.errors.tagName){
-						this.e(res.data.errors.tagName[0])
+					if(res.data.errors.categoryName){
+						this.e(res.data.errors.categoryName[0])
+					}
+					if(res.data.errors.iconImage){
+						this.e(res.data.errors.iconImage[0])
 					}
 				} else {
 					this.swr()
@@ -165,50 +198,71 @@ export default {
 				
 			}
 		},
-		showEditModal(tagObj, index){
+		showEditModal(categoryObj, index){
 			var obj = {
-				id: tagObj.id,
-				tagName: tagObj.tagName,
+				id: categoryObj.id,
+				categoryName: categoryObj.categoryName,
+				iconImage: categoryObj.iconImage,
 				index: index
 			}
 			this.editData = obj
 			this.editModal = true
 		},
-		showDeleteModal(tagObj, index){
+		showDeleteModal(categoryObj, index){
 			var obj = {
-				id: tagObj.id,
-				tagName: tagObj.tagName,
+				id: categoryObj.id,
+				categoryName: categoryObj.categoryName,
+				iconImage: categoryObj.iconImage,
 				index: index
 			}
 			this.deleteData = obj
 			this.deleteModal = true
 		},
-		async deleteTag() {
-			var tagObj = this.deleteData;
-			this.$set(tagObj, 'isDeleting', true)
-			const res = await this.callApi('post', 'app/delete_tag', tagObj)
+		async deleteCategory() {
+			var categoryObj = this.deleteData;
+			this.$set(categoryObj, 'isDeleting', true)
+			const res = await this.callApi('post', 'app/delete_category', categoryObj)
 			if (res.status == 200) {
-				this.tags.splice(tagObj.index,1);
+				this.categories.splice(categoryObj.index,1);
+				this.data.iconImage = categoryObj.iconImage
+				this.deleteImage();
 				this.deleteModal = false;
-				this.s('Tag has been deleted successfully')
+				this.s('Category has been deleted successfully')
 			} else {
 				this.swr()
 			}
 		},
 		async deleteImage(){
-			console.log(this.data.iconImage);
-			
-			let image = this.data.iconImage
-			this.data.iconImage = ''
-			this.$refs.uploads.clearFiles()
+			console.log('fdsf'+this.editModal + this.editData.iconImage);
+			var image;
+			if(this.editModal){
+				this.isIconImageNew = true
+				image = this.editData.iconImage
+				this.editData.iconImage = ''
+				this.$refs.editUploads.clearFiles()
+			} else {
+				image = this.data.iconImage
+				this.data.iconImage = ''
+				this.$refs.uploads.clearFiles()
+			}
+			console.log(image);
 			const res = await this.callApi('post', 'app/delete_image', {imageName: image})
 			if (res.status != 200){
+				this.editData.iconImage = image
 				this.data.iconImage = image
+				
 				this.swr();
+			} else {
+				this.editData.iconImage = ''
 			}
 		},
 		handleSuccess (res, file) {
-			this.data.iconImage = res
+			if (!this.editModal){
+				this.data.iconImage = res	
+			} else {
+				this.editData.iconImage = res
+			}
+			
 		},
 		handleError (res, file) {
 			console.log('res' + res);
@@ -233,10 +287,10 @@ export default {
 		
 	},
 	async created(){
-		const res = await this.callApi('get', 'app/get_tags', '');
+		const res = await this.callApi('get', 'app/get_categories', '');
 		//console.log(res.data);
 		if (res.status == 200){
-			this.tags = res.data;
+			this.categories = res.data;
 		} else {
 			this.swr()
 		}
