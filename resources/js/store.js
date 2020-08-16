@@ -12,5 +12,4 @@ export default new Vuex.Store({
             state.counter += data
         }
     }
-
 })
