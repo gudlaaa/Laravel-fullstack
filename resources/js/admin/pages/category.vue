@@ -112,7 +112,7 @@
 					</div>
 				</Modal>
 				<!-- delete modal -->
-				<Modal v-model="deleteModal" width="360">
+				<!-- <Modal v-model="deleteModal" width="360">
 					<p slot="header" style="color:#f60;text-align:center">
 						<Icon type="ios-information-circle"></Icon>
 						<span>Delete confirmation</span>
@@ -123,7 +123,8 @@
 					<div slot="footer">
 						<Button type="error" size="large" long :loading="false" :disabled="false" @click="deleteCategory">Delete</Button>
 					</div>
-				</Modal>
+				</Modal> -->
+				<deleteModal></deleteModal>
 
 			</div>
 		</div>
@@ -131,6 +132,8 @@
 </template>
 
 <script>
+import deleteModal from '../components/deleteModal'
+import { mapGetters } from 'vuex';
 export default {
 
 	data(){
@@ -143,6 +146,7 @@ export default {
 			editModal: false,
 			isAdding: false,
 			deleteModal: false,
+			isDeleting: false,
 			categories: [],
 			editData: {
 				categoryName: '',
@@ -209,29 +213,40 @@ export default {
 			this.editModal = true
 		},
 		showDeleteModal(categoryObj, index){
-			var obj = {
-				id: categoryObj.id,
-				categoryName: categoryObj.categoryName,
-				iconImage: categoryObj.iconImage,
-				index: index
+
+			// var obj = {
+			// 	id: categoryObj.id,
+			// 	categoryName: categoryObj.categoryName,
+			// 	iconImage: categoryObj.iconImage,
+			// 	index: index
+			// }
+			const deleteModalObj = {
+				showDeleteModal: true,
+				deleteUrl: 'app/delete_category',
+				data: categoryObj,
+				deletingIndex: categoryObj.id,
+				isDeleted: false
 			}
-			this.deleteData = obj
-			this.deleteModal = true
+		this.$store.commit('showDeleteModalObj', deleteModalObj)
+		console.log('delete Method is called')
+			// this.deleteData = obj
+			// this.deleteModal = true
 		},
-		async deleteCategory() {
-			var categoryObj = this.deleteData;
-			this.$set(categoryObj, 'isDeleting', true)
-			const res = await this.callApi('post', 'app/delete_category', categoryObj)
-			if (res.status == 200) {
-				this.categories.splice(categoryObj.index,1);
-				this.data.iconImage = categoryObj.iconImage
-				this.deleteImage();
-				this.deleteModal = false;
-				this.s('Category has been deleted successfully')
-			} else {
-				this.swr()
-			}
-		},
+		// moved deletecode to deleteModal.vue using vuex
+		// async deleteCategory() {
+		// 	var categoryObj = this.deleteData;
+		// 	this.$set(categoryObj, 'isDeleting', true)
+		// 	const res = await this.callApi('post', 'app/delete_category', categoryObj)
+		// 	if (res.status == 200) {
+		// 		this.categories.splice(categoryObj.index,1);
+		// 		this.data.iconImage = categoryObj.iconImage
+		// 		this.deleteImage();
+		// 		this.deleteModal = false;
+		// 		this.s('Category has been deleted successfully')
+		// 	} else {
+		// 		this.swr()
+		// 	}
+		// },
 		async deleteImage(){
 			console.log('fdsf'+this.editModal + this.editData.iconImage);
 			var image;
@@ -293,6 +308,22 @@ export default {
 			this.categories = res.data;
 		} else {
 			this.swr()
+		}
+	},
+	components: {
+		deleteModal
+	},
+	computed: {
+		...mapGetters(['getDeleteModalObj'])
+	},
+	watch: {
+		getDeleteModalObj(obj){
+			console.log(obj)
+			if(obj.isDeleted){
+
+				console.log(obj.deletingIndex)
+				this.categories.splice(obj.deletingIndex,1);
+			}
 		}
 	}
 }
