@@ -2982,6 +2982,7 @@ i.cross_icon{
     padding-top: 10px;
     padding-bottom: 10px;
     display: block;
+    
     color: #33475c;
     font-size: 1.5rem;
     font-weight: bold;
@@ -3112,4 +3113,7 @@ i.cross_icon{
   font-size: 20px;
   cursor: pointer;
   margin: 0 2px;
+}
+.space {
+  margin: 15px 0px;
 }

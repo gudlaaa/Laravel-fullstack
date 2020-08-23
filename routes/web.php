@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,28 +13,50 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-/* Tags */
-Route::post('app/create_tag', 'AdminController@addTag');
-Route::post('app/edit_tag', 'AdminController@editTag');
-Route::post('app/delete_tag', 'AdminController@deleteTag');
-Route::get('app/get_tags', 'AdminController@getTags');
-/* Tags */
 
-/* category */
+Route::prefix('app')->middleware(AdminCheck::class)->group(function(){
+    /* Tags */
+    Route::post('/create_tag', 'AdminController@addTag');
+    Route::post('/edit_tag', 'AdminController@editTag');
+    Route::post('/delete_tag', 'AdminController@deleteTag');
+    Route::get('/get_tags', 'AdminController@getTags');
+    /* Tags */
 
-Route::post('app/upload', 'AdminController@upload');
-Route::post('app/delete_image', 'AdminController@deleteImage');
-Route::post('app/create_category', 'AdminController@addCategory');
-Route::post('app/edit_category', 'AdminController@editCategory');
-Route::post('app/delete_category', 'AdminController@deleteCategory');
-Route::get('app/get_categories', 'AdminController@getCategories');
+    /* category */
 
-/* category */
+    Route::post('/upload', 'AdminController@upload');
+    Route::post('/delete_image', 'AdminController@deleteImage');
+    Route::post('/create_category', 'AdminController@addCategory');
+    Route::post('/edit_category', 'AdminController@editCategory');
+    Route::post('/delete_category', 'AdminController@deleteCategory');
+    Route::get('/get_categories', 'AdminController@getCategories');
 
-Route::get('/', function () {
-    return view('welcome');
+    /* category */
+
+    /* Users */
+    Route::post('/create_user', 'AdminController@CreateUser');
+    Route::post('/edit_user', 'AdminController@editUser');
+    // Route::post('/delete_tag', 'AdminController@deleteTag');
+    Route::get('/get_users', 'AdminController@getUsers');
+    Route::post('/admin_login', 'AdminController@adminLogin');
+    /* Users */
+
 });
 
-Route::any('{slug}', function () {
-    return view('welcome');
-});
+
+/* User Login */
+
+Route::get('/', 'AdminController@index');
+Route::get('logout', 'AdminController@logout');
+Route::any('{slug}', 'AdminController@index');
+
+
+
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+// Route::any('{slug}', function () {
+//     return view('welcome');
+// });

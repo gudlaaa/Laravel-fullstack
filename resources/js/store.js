@@ -13,6 +13,7 @@ export default new Vuex.Store({
             deletingIndex: -1,
             isDeleted: false
         },
+        user: false,
     },
     getters: {
         getCounter(state){
@@ -20,7 +21,10 @@ export default new Vuex.Store({
         },
         getDeleteModalObj(state){
             return state.deleteModalObj
-        }
+        },
+        // loggedInuser(state){
+        //     return state.user
+        // }
     },
     mutations:{
         startTheCounter(state, data){
@@ -38,6 +42,9 @@ export default new Vuex.Store({
         },
         showDeleteModalObj(state,data) {
             state.deleteModalObj = data
+        },
+        updateUser(state,data) {
+            state.user = data
         }
     },
     actions: {

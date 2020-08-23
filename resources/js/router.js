@@ -4,12 +4,15 @@ Vue.use(Router)
 import firstpage from './components/pages/myFirstVuePage'
 import newRoute from './components/pages/newRoute'
 import methods from './components/pages/basic/methods'
+import usecom from './vuex/usecom'
 
 // admin project pages
 import home from './components/pages/home'
 import tags from './admin/pages/tags'
 import category from './admin/pages/category'
-import usecom from './vuex/usecom'
+import adminusers from './admin/pages/adminusers'
+import login from './admin/pages/login'
+
 
 const routes = [
 
@@ -30,6 +33,14 @@ const routes = [
     {
         path: '/category',
         component: category
+    },
+    {
+        path: '/adminusers',
+        component: adminusers
+    },
+    {
+        path: '/login',
+        component: login
     },
     {
         path: '/my-name-vue-route',
