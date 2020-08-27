@@ -22,6 +22,8 @@
               <li><router-link to='/tags'><Icon type="md-pricetag" />Tags</router-link></li>
               <li><router-link to='/category'><Icon type="md-pricetag" />Categories</router-link></li>
               <li><router-link to='/adminusers'><Icon type="md-pricetag" />Admin Users</router-link></li>
+              <li><router-link to='/role'><Icon type="md-pricetag" />Role Management</router-link></li>
+              <li><router-link to='/assignRole'><Icon type="md-pricetag" />Assign Role</router-link></li>
               <li><a href='/logout'><Icon type="md-pricetag" />Logout</a></li>
             </ul>
           </div>
