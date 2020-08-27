@@ -1,3 +1,5 @@
+import { mapGetters } from "vuex";
+
 export default {
     data(){
         return{
@@ -50,7 +52,41 @@ export default {
         },
         csrfToken(){
             return window.Laravel.csrfToken;
+        },
+        checkUserPermission(key){
+            if(!this.userPermission) return true
+            let isPermitted = false;
+            for(let d of this.userPermission){
+                if(this.$route.name==d.name){
+                    if(d[key]){
+                        isPermitted = true;
+                        break;
+                    } else {
+                        break;
+                    }
+                }
+                console.log(d[key])
+            }
+            return isPermitted
         }
     },
+    computed: {
+        ...mapGetters({
+            'userPermission' : 'getUserPermission'
+        }),
+        isReadPermitted(){
+           // console.log(this.userPermission)    
+            return this.checkUserPermission('read')
+        },
+        isWritePermitted(){
+            return this.checkUserPermission('write')
+        },
+        isUpdatePermitted(){
+            return this.checkUserPermission('update')
+        },
+        isDeletePermitted(){
+            return this.checkUserPermission('delete')
+        },
+    }
 
 }

@@ -5,7 +5,7 @@
 				
 				<!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
 				<div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
-					<p class="_title0">Tags <Button @click="addModal = true"><Icon type="md-add" />Add</Button></p>
+					<p class="_title0">Tags <Button @click="addModal = true" v-if="isWritePermitted"><Icon type="md-add" />Add</Button></p>
 
 					<div class="_overflow _table_div">
 						<table class="_table">
@@ -26,8 +26,8 @@
 								<td>{{tag.tagName}}</td>
 								<td>{{tag.created_at}}</td>
 								<td>
-									<Button type="info" size="small" @click="showEditModal(tag, i)">Edit</Button>
-									<Button type="error" size="small" @click="showDeleteModal(tag, i)" :loading="tag.isDeleting" >Delete</Button>
+									<Button type="info" size="small" @click="showEditModal(tag, i)" v-if="isUpdatePermitted">Edit</Button>
+									<Button type="error" size="small" @click="showDeleteModal(tag, i)" :loading="tag.isDeleting" v-if="isDeletePermitted">Delete</Button>
 									<!-- <button class="_btn btn-primary" type="button">Edit</button>
 									<button class="_btn _action_btn make_btn1" type="button">Delete</button> -->
 								</td>
