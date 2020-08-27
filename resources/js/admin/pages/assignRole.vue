@@ -7,7 +7,7 @@
 				<div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
 					<p class="_title0">
                         Role Managment 
-                        <Select v-model="data.id" placeholder="Select admin type" style="width:300px" @on-change="chnageAdmin">
+                        <Select v-model="data.id" placeholder="Select admin type" style="width:300px" @on-change="chnageAdmin" v-if="isWritePermitted">
 							 
                             <Option v-for="(r, i) in roles " :key="i" v-if="roles.length" :value="r.id" >{{r.roleName}}</Option>
                             
@@ -36,7 +36,7 @@
 							</tr>
 								<!-- ITEMS -->
                             <div class="center_button">
-                                <Button type="primary" :loading="isSending" :disabled="isSending" @click="assignRoles">Assign</Button>
+                                <Button type="primary" :loading="isSending" :disabled="isSending" @click="assignRoles" v-if="isUpdatePermitted">Assign</Button>
                             </div>
 
 						</table>
@@ -64,7 +64,7 @@ export default {
                 {resourceName: 'Adminusers', read: false, write: false, update: false, delete: false, name: 'adminusers'},
                 {resourceName: 'Role', read: false, write: false, update: false, delete: false, name: 'role'},
                 {resourceName: 'AssignRole', read: false, write: false, update: false, delete: false, name: 'assignRole'},
-                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: 'home'}
+                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: '/'}
             ],
             defaultResourcesPermisson: [
                 {resourceName: 'Tags', read: false, write: false, update: false, delete: false, name: 'tags'},
@@ -72,7 +72,7 @@ export default {
                 {resourceName: 'Adminusers', read: false, write: false, update: false, delete: false, name: 'adminusers'},
                 {resourceName: 'Role', read: false, write: false, update: false, delete: false, name: 'role'},
                 {resourceName: 'AssignRole', read: false, write: false, update: false, delete: false, name: 'assignRole'},
-                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: 'home'}
+                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: '/'}
             ],
 			roles: [],
 		}

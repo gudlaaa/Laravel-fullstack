@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Fullstack | Laravel</title>
+        <title>Page is not found</title>
         <link rel="stylesheet" href="/css/all.css">
         <script>
         (function(){
@@ -16,13 +16,15 @@
 
     </head>
     <body>
-        <div id="app">
-            @if(Auth::check())
-                <mainapp :user="{{Auth::user()}}" :permission="{{Auth::user()->role->permission}}"></mainapp>
-            @else
-            <mainapp :user=false></mainapp>
-            @endif
-        </div>
+    <div class="container">
+			
+				
+				<!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
+				<div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
+                    <h1 class="_text_center"> You dont have a enough permission to access this page </h1>
+                </div>    
+            
+    </div        
     </body>
-    <script src={{ mix('/js/app.js') }}></script>
+    
 </html>
