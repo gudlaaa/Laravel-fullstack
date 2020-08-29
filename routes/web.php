@@ -51,6 +51,7 @@ Route::prefix('app')->middleware(AdminCheck::class)->group(function(){
 
 });
 
+Route::post('createBlog', 'AdminController@uploadEditorImage');
 
 /* User Login */
 
