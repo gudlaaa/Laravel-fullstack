@@ -270,5 +270,22 @@ class AdminController extends Controller
     }
     /* Role management */
 
+    //upload image from editor JS
+    public function uploadEditorImage(Request $request){
+        $this->validate($request, [
+            'image' => 'required|mimes:jpeg,jpg,png,gif',
+        ]);
+
+        $filename = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('uploads'), $filename);
+        return response()->json([
+            'success' => 1,
+            'file' => [
+                'url' => 'http://localhost:8001/uploads/'.$filename,
+            ],
+        ]);
+        //return $filename;
+    }
+
 
 }
