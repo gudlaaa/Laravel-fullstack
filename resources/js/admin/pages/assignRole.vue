@@ -59,20 +59,22 @@ export default {
             },
             isSending: false,
             resources: [
+                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: '/'},
                 {resourceName: 'Tags', read: false, write: false, update: false, delete: false, name: 'tags'},
                 {resourceName: 'Category', read: false, write: false, update: false, delete: false, name: 'category'},
+                {resourceName: 'Create blogs', read: false, write: false, update: false, delete: false, name: 'createBlog'},
                 {resourceName: 'Adminusers', read: false, write: false, update: false, delete: false, name: 'adminusers'},
                 {resourceName: 'Role', read: false, write: false, update: false, delete: false, name: 'role'},
                 {resourceName: 'AssignRole', read: false, write: false, update: false, delete: false, name: 'assignRole'},
-                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: '/'}
-            ],
+            ],  
             defaultResourcesPermisson: [
+                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: '/'},
                 {resourceName: 'Tags', read: false, write: false, update: false, delete: false, name: 'tags'},
                 {resourceName: 'Category', read: false, write: false, update: false, delete: false, name: 'category'},
+                {resourceName: 'Create blogs', read: false, write: false, update: false, delete: false, name: 'createBlog'},
                 {resourceName: 'Adminusers', read: false, write: false, update: false, delete: false, name: 'adminusers'},
                 {resourceName: 'Role', read: false, write: false, update: false, delete: false, name: 'role'},
                 {resourceName: 'AssignRole', read: false, write: false, update: false, delete: false, name: 'assignRole'},
-                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: '/'}
             ],
 			roles: [],
 		}
