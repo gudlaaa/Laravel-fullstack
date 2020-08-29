@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Tag;
+use App\Blog;
+use App\Role;
 use App\User;
 use App\Category;
-use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -285,6 +286,17 @@ class AdminController extends Controller
             ],
         ]);
         //return $filename;
+    }
+
+    public function slug(){
+        $title = 'This is a nice tutorial';
+        return Blog::create([
+            'title' => 'test',
+            'post' => 'some post',
+            'post_excerpt' => 'dsadsadsa',
+            'user_id' => 1,
+            'metaDescription' => 'abcs'
+        ]);
     }
 
 
