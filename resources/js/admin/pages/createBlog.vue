@@ -7,8 +7,8 @@
 				<div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
 					<p class="_title0">Create blog</p>
 					<div class="_input_field">
-						 <Input type="text" placeholder="Title" />
-					 </div>
+						 <Input type="text" v-model="data.title" placeholder="Title" />
+					</div>
 					<div class="_overflow _table_div blog_editor">
 
                              <editor
@@ -23,6 +23,23 @@
 
 
 					</div>
+                    <div class="_input_field">
+						 <Input  type="textarea" v-model="data.post_excerpt" :rows="4" placeholder="Post excerpt " />
+					 </div>
+					<div class="_input_field">
+						<Select  filterable multiple placeholder="Select category" v-model="data.category_id">
+							<Option v-for="(c, i) in category" :value="c.id" :key="i">{{ c.categoryName }}</Option>
+						</Select>
+					</div>
+					<div class="_input_field">
+						<Select  filterable multiple placeholder="Select tag" v-model="data.tag_id">
+							<Option v-for="(t, i) in tag" :value="t.id" :key="i">{{ t.tagName }}</Option>
+						</Select>
+					</div>
+					<div class="_input_field">
+						 <Input  type="textarea" v-model="data.metaDescription" :rows="4" placeholder="Meta description" />
+					 </div>
+
 
 					 <div class="_input_field">
 						 <Button @click="save" :loading="isCreating" :disabled="isCreating">{{isCreating ? 'Please wait...' : 'Create blog'}}</Button>
@@ -49,7 +66,21 @@ export default {
 
 			},
             initData: null,
-			articleHTML: '',
+            
+            data: {
+				title : '',
+				post : '',
+				post_excerpt : '',
+				metaDescription : '',
+				category_id : [],
+				tag_id : [],
+				jsonData: null
+            },
+            articleHTML: '',
+            category : [],
+			tag : [],
+			isCreating: false,
+
 		}
 	},
 
@@ -60,7 +91,29 @@ export default {
         async onSave(response){
             var data = response
             await this.outputHtml(data.blocks)
-            console.log(this.articleHTML)
+            this.data.post = this.articleHTML
+            this.data.jsonData = JSON.stringify(data)
+            if(this.data.post.trim()=='') return this.e('Post is required')
+            if(this.data.title.trim()=='') return this.e('Title is required')
+            if(this.data.post_excerpt.trim()=='') return this.e('Post exerpt is required')
+            if(this.data.metaDescription.trim()=='') return this.e('Meta description is required')
+            if(!this.data.tag_id.length) return this.e('Tag is required')
+            if(!this.data.category_id.length) return this.e('Category is required')
+            this.isCreating = true
+            const res = await this.callApi('post', 'app/create_blog', this.data)
+            if(res.status==200){
+                this.s('Blog has been created successfuly.')
+                this.$router.push('/blogs')
+            } else {
+				if(res.status==422){
+                this.s('Blog has been created successfuly.')
+				for(let i in res.data.errors){
+					this.e(res.data.errors[i][0])
+				}
+            }
+                this.swr()
+            }
+            this.isCreating = false
 			
         },
         async save(){

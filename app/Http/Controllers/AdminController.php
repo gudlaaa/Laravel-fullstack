@@ -6,8 +6,11 @@ use App\Tag;
 use App\Blog;
 use App\Role;
 use App\User;
+use App\Blogtag;
 use App\Category;
+use App\Blogcategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -299,5 +302,73 @@ class AdminController extends Controller
         ]);
     }
 
+    public function createBlog(Request $request){
 
+        $this->validate($request, [
+            'title' => 'required',
+            'post' => 'required',
+            'post_excerpt' => 'required',
+            'metaDescription' => 'required',
+            'jsonData' => 'required',
+            'category_id' => 'required',
+            'tag_id' => 'required',
+
+        ]);
+
+        $categories = $request->category_id;
+        $blogCategory = [];
+
+        $tags = $request->tag_id;
+        $blogTag = [];
+
+        DB::beginTransaction();
+
+        try{
+            $blog = Blog::create([
+                'title' => $request->title,
+                'slug' => $request->title,
+                'post' => $request->post,
+                'post_excerpt' => $request->post_excerpt,
+                'user_id' => Auth::user()->id,
+                'metaDescription' => $request->metaDescription,
+                'jsonData' => $request->jsonData
+            ]);
+
+            //insert blog categories
+            foreach($categories as $c){
+                array_push($blogCategory, [
+                    'category_id' => $c,
+                    'blog_id' => $blog->id,
+                ]);
+            }
+
+            //insert blog tags
+            foreach($tags as $t){
+                array_push($blogTag, [
+                    'tag_id' => $t,
+                    'blog_id' => $blog->id,
+                ]);
+            }
+
+            Blogcategory::insert($blogCategory);
+
+            Blogtag::insert($blogTag);
+
+            DB::commit();
+
+            return 'done';
+        } catch( \throwable  $th){
+            DB::rollBack();
+            return 'notdone';
+        }
+    }
+
+    public function blogsdata(){
+        return Blog::with(['tag','cat'])->orderBy('id', 'desc')->get();
+    }
+
+    public function deleteBlog(Request $request){
+        return Blog::where('id', $request->id)->delete();
+
+    }
 }

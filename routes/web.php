@@ -49,7 +49,13 @@ Route::prefix('app')->middleware(AdminCheck::class)->group(function(){
     Route::post('/assign_roles', 'AdminController@assignRoles');
     /* User Roles */
 
-    Route::any('{slug}', 'AdminController@index');
+    /* Blog */
+    Route::post('/create_blog', 'AdminController@createBlog');
+    Route::post('/edit_role', 'AdminController@editRole');
+    Route::post('/delete_blog', 'AdminController@deleteBlog');
+    Route::get('/blogsdata', 'AdminController@blogsdata');
+    Route::post('/assign_roles', 'AdminController@assignRoles');
+    /* Blog */
 
 });
 
@@ -59,12 +65,11 @@ Route::prefix('app')->middleware(AdminCheck::class)->group(function(){
 
 Route::get('/', 'AdminController@index');
 Route::get('logout', 'AdminController@logout');
-
+Route::get('{slug}', 'AdminController@index');
 
 /* USer Login */
 
-Route::post('createBlog', 'AdminController@uploadEditorImage');
-Route::get('slug', 'AdminController@slug');
+ Route::post('createBlog', 'AdminController@uploadEditorImage');
 
 
 

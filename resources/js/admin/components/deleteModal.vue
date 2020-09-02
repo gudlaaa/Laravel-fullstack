@@ -10,7 +10,7 @@
                 <span>Delete confirmation</span>
             </p>
             <div style="text-align:center">
-                <p>Are you sure you want to delete this category?</p>
+                <p>{{this.getDeleteModalObj.msg}}</p>
             </div>
             <div slot="footer">
                  <Button type="default" size="large" @click="closeModal">Close</Button>
@@ -38,7 +38,7 @@ export default {
 				// this.data.iconImage = categoryObj.iconImage
 				// this.deleteImage();
 				// this.deleteModal = false;
-                this.s('Category has been deleted successfully')
+                this.s(getDeleteModalObj.successMsg)
                 this.$store.commit('setDeleteModal', true)
 			} else { 
                 this.swr()
