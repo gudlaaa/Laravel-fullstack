@@ -15,7 +15,9 @@ import login from './admin/pages/login'
 import role from './admin/pages/role'
 import assignRole from './admin/pages/assignRole'
 import createBlog from './admin/pages/createBlog'
+import editblog from './admin/pages/editblog'
 import blogs from './admin/pages/blogs'
+import notfound from './admin/pages/notfound'
 
 
 
@@ -51,6 +53,16 @@ const routes = [
         path: '/blogs',
         component: blogs,
         name: 'blogs'
+    },
+    {
+        path: '*',
+        component: notfound,
+        name: 'notfound'
+    },
+    {
+        path: '/editblog/:id',
+        component: editblog,
+        name: 'editblog'
     },
     {
         path: '/adminusers',
