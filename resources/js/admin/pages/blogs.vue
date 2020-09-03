@@ -35,7 +35,7 @@
 								<td>{{blog.views}}</td>
 								<td>
 									<Button type="info" size="small" @click="" v-if="isUpdatePermitted">Visit blog</Button>
-									<Button type="info" size="small" @click="showEditModal(blog, i)" v-if="isUpdatePermitted">Edit</Button>
+									<Button type="info" size="small" @click="$router.push(`/editblog/${blog.id}`)" v-if="isUpdatePermitted">Edit</Button>
 									<Button type="error" size="small" @click="showDeleteModal(blog, i)" :loading="blog.isDeleting" v-if="isDeletePermitted">Delete</Button>
 									<!-- <button class="_btn btn-primary" type="button">Edit</button>
 									<button class="_btn _action_btn make_btn1" type="button">Delete</button> -->
@@ -78,7 +78,7 @@ export default {
 		showDeleteModal(blog, index){
 			const deleteModalObj = {
 				showDeleteModal: true,
-				deleteUrl: 'app/delete_tag',
+				deleteUrl: 'app/delete_blog',
 				data: {id: blog.id},
 				deletingIndex: blog.id,
 				isDeleted: false,
