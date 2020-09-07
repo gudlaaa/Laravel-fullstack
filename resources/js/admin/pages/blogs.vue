@@ -47,7 +47,7 @@
 						</table>
 					</div>
 				</div>
-				 <Page :total="100" />
+				 <Page :total="pageInfo.total" :current="pageInfo.current_page" :page-size="pageInfo.per_page" @on-change="getBlogData" v-if="pageInfo" />
 				
 				<deleteModal></deleteModal>
 
@@ -67,11 +67,10 @@ export default {
 			isAdding: false,
 			deleteModal: false,
 			isDeleting: false,
-			tags: [],
-			editData: {
-				tagName: '',
-			},
+			total: 1,
 			deleteData: {},
+			pageInfo: null
+			
 		}
 	},
 	methods: {
@@ -100,17 +99,20 @@ export default {
 			} else {
 				this.swr()
 			}
+		},
+		async getBlogData(page = 1){
+			const res = await this.callApi('get', `app/blogsdata?page=${page}&total=${this.total}`, '');
+			if (res.status == 200){
+				this.blogs = res.data.data;
+				this.pageInfo = res.data;
+			} else {
+				this.swr()
+			}
 		}
 		
 	},
 	async created(){
-		const res = await this.callApi('get', 'app/blogsdata', '');
-		//console.log(res.data);
-		if (res.status == 200){
-			this.blogs = res.data;
-		} else {
-			this.swr()
-		}
+		this.getBlogData();
 	},
 	components: {
 		deleteModal
