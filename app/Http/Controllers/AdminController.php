@@ -367,8 +367,8 @@ class AdminController extends Controller
         }
     }
 
-    public function blogsdata(){
-        return Blog::with(['tag','cat'])->orderBy('id', 'desc')->get();
+    public function blogsdata(Request $request){
+        return Blog::with(['tag','cat'])->orderBy('id', 'desc')->paginate($request->total);
     }
 
     public function deleteBlog(Request $request){
